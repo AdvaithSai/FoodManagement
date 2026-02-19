@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 
 function CustomerDashboard(){
 
@@ -24,6 +26,11 @@ function CustomerDashboard(){
       <h1>Customer Dashboard</h1>
 
       <button onClick={logout}>Logout</button>
+      <br/><br/>
+
+<Link to="/cart">
+  <button>View Cart 🛒</button>
+</Link>
 
       <h2>Available Restaurants</h2>
 
@@ -31,12 +38,16 @@ function CustomerDashboard(){
         <p>No restaurants available</p>
       ) : (
         restaurants.map(r=>(
-          <div key={r.id}>
-            <h3>{r.name}</h3>
-            <p>{r.description}</p>
-            <p>{r.city}</p>
-            <hr/>
-          </div>
+            <div key={r.id}>
+    <h3>{r.name}</h3>
+    <p>{r.city}</p>
+
+    <Link to={`/menu/${r.id}`}>
+      View Menu
+    </Link>
+
+    <hr/>
+  </div>
         ))
       )}
 

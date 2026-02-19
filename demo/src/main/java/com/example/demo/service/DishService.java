@@ -23,4 +23,9 @@ public class DishService {
     public List<Dish> getByRestaurant(Long id){
         return repo.findByRestaurantId(id);
     }
+
+    public void delete(Long id){
+    repo.deleteById(id);
+}
+
 }

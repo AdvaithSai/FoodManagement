@@ -22,7 +22,7 @@ function AddDish({restaurantId}){
 
   return(
     <form onSubmit={submit}>
-      <h4>Add Dish</h4>
+      
 
       <input placeholder="Name"
         onChange={e=>setDish({...dish,name:e.target.value})}/>

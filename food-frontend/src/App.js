@@ -4,6 +4,9 @@ import Register from "./Register";
 import OwnerDashboard from "./OwnerDashboard";
 import CustomerDashboard from "./CustomerDashboard";
 import PrivateRoute from "./PrivateRoute";
+import Menu from "./Menu";
+import Cart from "./Cart";
+
 
 function App() {
   return (
@@ -12,6 +15,8 @@ function App() {
 
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/menu/:id" element={<Menu />} />
+        <Route path="/cart" element={<Cart />} />
 
         <Route
           path="/owner"

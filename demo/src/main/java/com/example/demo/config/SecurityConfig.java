@@ -16,7 +16,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/api/auth/**",
-                    "/api/restaurants/**"
+                    "/api/restaurants/**",
+                    "/api/cart/**",
+                    "/api/dishes/**"
                 ).permitAll()
                 .anyRequest().permitAll()
             )
