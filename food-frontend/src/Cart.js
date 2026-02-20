@@ -1,44 +1,88 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function Cart(){
+function Cart() {
 
   const user = JSON.parse(localStorage.getItem("user"));
-  const [items,setItems] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     axios.get(
       `http://localhost:8080/api/cart/${user.id}`
-    ).then(res=>{
-      setItems(res.data);
+    ).then(res => {
+      setCartItems(res.data);
     });
-  },[user.id]);
+  }, [user.id]);
 
-  const remove = async (id)=>{
+  const removeItem = async (cartId) => {
     await axios.delete(
-      `http://localhost:8080/api/cart/remove/${id}`
+      `http://localhost:8080/api/cart/remove/${cartId}`
     );
-    window.location.reload();
+
+    setCartItems(cartItems.filter(item => item.id !== cartId));
   };
 
-  return(
-    <div>
-      <h2>Your Cart</h2>
+  const placeOrder = async () => {
 
-      {items.length===0 ? (
-        <p>Cart empty</p>
+    await axios.post(
+      `http://localhost:8080/api/orders/place/${user.id}`
+    );
+
+    alert("Order placed successfully!");
+
+    setCartItems([]);
+  };
+
+  const total = cartItems.reduce(
+    (sum, item) => sum + item.dish.price,
+    0
+  );
+
+  return (
+    <div className="page">
+
+      <h1 className="page-title">Your Cart 🛒</h1>
+
+      {cartItems.length === 0 ? (
+        <div className="card">
+          <p>Your cart is empty.</p>
+        </div>
       ) : (
-        items.map(i=>(
-          <div key={i.id}>
-            <h3>{i.dish.name}</h3>
-            <p>₹ {i.dish.price}</p>
-            <button onClick={()=>remove(i.id)}>
-              Remove
+        <>
+          {cartItems.map(item => (
+            <div key={item.id} className="card">
+
+              <h3>{item.dish.name}</h3>
+              <p style={{ color: "gray" }}>
+                ₹{item.dish.price}
+              </p>
+
+              <button
+                className="btn btn-danger"
+                onClick={() => removeItem(item.id)}
+              >
+                Remove
+              </button>
+
+            </div>
+          ))}
+
+          {/* TOTAL SECTION */}
+          <div className="card" style={{ marginTop: "20px" }}>
+
+            <h3>Total: ₹{total}</h3>
+
+            <button
+              className="btn btn-success"
+              onClick={placeOrder}
+            >
+              Place Order
             </button>
-            <hr/>
+
           </div>
-        ))
+        </>
       )}
+
     </div>
   );
 }

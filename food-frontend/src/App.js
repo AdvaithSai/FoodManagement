@@ -6,6 +6,9 @@ import CustomerDashboard from "./CustomerDashboard";
 import PrivateRoute from "./PrivateRoute";
 import Menu from "./Menu";
 import Cart from "./Cart";
+import OrderHistory from "./OrderHistory";
+import OwnerOrders from "./OwnerOrders";
+
 
 
 function App() {
@@ -17,6 +20,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/menu/:id" element={<Menu />} />
         <Route path="/cart" element={<Cart />} />
+<Route path="/orders" element={<OrderHistory />} />
+<Route path="/owner/orders" element={<OwnerOrders />} />
 
         <Route
           path="/owner"

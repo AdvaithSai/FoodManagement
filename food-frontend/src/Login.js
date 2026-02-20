@@ -1,51 +1,79 @@
 import { useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
-  const [data,setData] = useState({email:"",password:""});
+
   const navigate = useNavigate();
 
-  const login = async () => {
-    const res = await axios.post(
-      "http://localhost:8080/api/auth/login",
-      data
-    );
+  const [loginUser, setLoginUser] = useState({
+    email: "",
+    password: ""
+  });
 
-    if(!res.data){
-      alert("Invalid credentials");
-      return;
-    }
+  const login = async (e) => {
+    e.preventDefault();
 
-    const role = res.data.role;
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/api/auth/login",
+        loginUser
+      );
 
-    // SAVE USER (optional but useful)
-    localStorage.setItem("user", JSON.stringify(res.data));
+      if (res.data) {
+        localStorage.setItem("user", JSON.stringify(res.data));
 
-    if(role === "OWNER"){
-      navigate("/owner");
-    } else {
-      navigate("/customer");
+        // redirect based on role
+        if (res.data.role === "OWNER") {
+          navigate("/owner");
+        } else {
+          navigate("/customer");
+        }
+
+      } else {
+        alert("Invalid credentials");
+      }
+
+    } catch (err) {
+      alert("Login failed");
     }
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+  <div className="page">
+    <div className="card" style={{ maxWidth: "400px", margin: "auto" }}>
+      <h2 className="page-title">Login</h2>
 
-      <input placeholder="Email"
-        onChange={e=>setData({...data,email:e.target.value})}/>
+      <form onSubmit={login}>
+        <input
+          className="input"
+          placeholder="Email"
+          onChange={e =>
+            setLoginUser({ ...loginUser, email: e.target.value })
+          }
+        />
+<br /><br />
+        <input
+          className="input"
+          type="password"
+          placeholder="Password"
+          onChange={e =>
+            setLoginUser({ ...loginUser, password: e.target.value })
+          }
+        />
 
-      <input type="password" placeholder="Password"
-        onChange={e=>setData({...data,password:e.target.value})}/>
+        <br /><br />
 
-      <button onClick={login}>Login</button>
+        <button className="btn btn-primary">Login</button>
+      </form>
 
       <p>
-        New user? <Link to="/register">Register here</Link>
+        New user? <Link to="/register">Register</Link>
       </p>
     </div>
-  );
+  </div>
+);
+
 }
 
 export default Login;

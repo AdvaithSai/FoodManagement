@@ -9,20 +9,13 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable())   // ✅ IMPORTANT
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/api/auth/**",
-                    "/api/restaurants/**",
-                    "/api/cart/**",
-                    "/api/dishes/**"
-                ).permitAll()
                 .anyRequest().permitAll()
-            )
-            .formLogin(form -> form.disable());
+            );
 
         return http.build();
     }

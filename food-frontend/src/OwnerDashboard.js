@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "./axiosConfig";
+
 import AddRestaurant from "./AddRestaurant";
 import AddDish from "./AddDish";
+
+
 
 function OwnerDashboard() {
 
@@ -26,24 +29,38 @@ function OwnerDashboard() {
   }, [user.id]);
 
   return (
-    <div>
-      <h1>Owner Dashboard</h1>
+  <div className="page">
 
-      <button onClick={logout}>Logout</button>
+    <h1 className="page-title">Owner Dashboard</h1>
 
-      <h2>Your Restaurants</h2>
+    <button className="btn btn-danger" onClick={logout}>
+      Logout
+    </button>
 
-      {restaurants.length === 0 ? (
-        <p>No restaurants yet</p>
-      ) : (
-        restaurants.map(r => (
-          <RestaurantBlock key={r.id} restaurant={r} />
-        ))
-      )}
+    <h2 style={{ marginTop: "30px" }}>Your Restaurants</h2>
 
+    {restaurants.length === 0 ? (
+      <p>No restaurants yet</p>
+    ) : (
+      restaurants.map(r => (
+        <div key={r.id} className="card">
+
+          <h3>{r.name}</h3>
+          <p style={{ color: "gray" }}>{r.city}</p>
+
+          <RestaurantBlock restaurant={r} />
+
+        </div>
+      ))
+    )}
+
+    <div className="card">
       <AddRestaurant />
     </div>
-  );
+
+  </div>
+);
+
 }
 
 function RestaurantBlock({ restaurant }) {

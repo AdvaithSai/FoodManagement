@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "./axiosConfig";
+
 import { useParams } from "react-router-dom";
 
 function Menu(){
@@ -24,28 +25,41 @@ const addToCart = async (dishId)=>{
     });
   },[id]);
 
-  return(
-    <div>
-      <h2>Menu</h2>
+  return (
+  <div className="page">
 
-      {dishes.length === 0 ? (
-        <p>No dishes available</p>
-      ) : (
-        dishes.map(d=>(
-          <div key={d.id}>
+    <h1 className="page-title">Menu</h1>
+
+    {dishes.length === 0 ? (
+      <p>No dishes available</p>
+    ) : (
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+        gap: "20px"
+      }}>
+        {dishes.map(d => (
+          <div key={d.id} className="card">
+
             <h3>{d.name}</h3>
-            <p>{d.description}</p>
-            <p>₹ {d.price}</p>
-            <button onClick={()=>addToCart(d.id)}>
-  Add to Cart
-</button>
+            <p style={{ color: "gray" }}>{d.description}</p>
+            <p><strong>₹{d.price}</strong></p>
 
-            <hr/>
+            <button
+              className="btn btn-primary"
+              onClick={() => addToCart(d.id)}
+            >
+              Add to Cart 🛒
+            </button>
+
           </div>
-        ))
-      )}
-    </div>
-  );
+        ))}
+      </div>
+    )}
+
+  </div>
+);
+
 }
 
 export default Menu;
