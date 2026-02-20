@@ -1,17 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "./axiosConfig";
-
+import axios from "axios";
 import AddRestaurant from "./AddRestaurant";
-import AddDish from "./AddDish";
-
-
 
 function OwnerDashboard() {
 
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
-
   const [restaurants, setRestaurants] = useState([]);
 
   const logout = () => {
@@ -19,7 +14,6 @@ function OwnerDashboard() {
     navigate("/");
   };
 
-  // Fetch restaurants of owner
   useEffect(() => {
     axios.get(
       `http://localhost:8080/api/restaurants/owner/${user.id}`
@@ -29,45 +23,66 @@ function OwnerDashboard() {
   }, [user.id]);
 
   return (
-  <div className="page">
+    <div className="page">
 
-    <h1 className="page-title">Owner Dashboard</h1>
+      <div style={{
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginBottom: "20px"
+}}>
 
-    <button className="btn btn-danger" onClick={logout}>
-      Logout
+  <h1 className="page-title">Owner Dashboard</h1>
+
+  <div>
+    <button
+      className="btn btn-primary"
+      onClick={() => navigate("/owner/orders")}
+    >
+      View Orders 📦
     </button>
 
-    <h2 style={{ marginTop: "30px" }}>Your Restaurants</h2>
-
-    {restaurants.length === 0 ? (
-      <p>No restaurants yet</p>
-    ) : (
-      restaurants.map(r => (
-        <div key={r.id} className="card">
-
-          <h3>{r.name}</h3>
-          <p style={{ color: "gray" }}>{r.city}</p>
-
-          <RestaurantBlock restaurant={r} />
-
-        </div>
-      ))
-    )}
-
-    <div className="card">
-      <AddRestaurant />
-    </div>
-
+    <button
+      className="btn btn-danger"
+      onClick={logout}
+      style={{ marginLeft: "10px" }}
+    >
+      Logout
+    </button>
   </div>
-);
 
+</div>
+
+      <h2 style={{ marginTop: "30px" }}>Your Restaurants</h2>
+
+      {restaurants.length === 0 ? (
+        <div className="card">
+          <p>No restaurants yet</p>
+        </div>
+      ) : (
+        restaurants.map(r => (
+          <RestaurantCard key={r.id} restaurant={r} />
+        ))
+      )}
+
+      <div className="card" style={{ marginTop: "30px" }}>
+        <h3>Add New Restaurant</h3>
+        <AddRestaurant />
+      </div>
+
+    </div>
+  );
 }
 
-function RestaurantBlock({ restaurant }) {
+function RestaurantCard({ restaurant }) {
 
   const [dishes, setDishes] = useState([]);
+  const [newDish, setNewDish] = useState({
+    name: "",
+    description: "",
+    price: ""
+  });
 
-  // Fetch dishes of this restaurant
   useEffect(() => {
     axios.get(
       `http://localhost:8080/api/dishes/restaurant/${restaurant.id}`
@@ -81,25 +96,65 @@ function RestaurantBlock({ restaurant }) {
       `http://localhost:8080/api/dishes/delete/${dishId}`
     );
 
-    // Remove dish from state (no page reload)
     setDishes(dishes.filter(d => d.id !== dishId));
   };
 
-  return (
-    <div style={{ border: "1px solid gray", padding: "10px", margin: "10px 0" }}>
-      <h3>{restaurant.name}</h3>
-      <p>{restaurant.city}</p>
+  const addDish = async (e) => {
+    e.preventDefault();
 
+    await axios.post(
+      `http://localhost:8080/api/dishes/add/${restaurant.id}`,
+      newDish
+    );
+
+    setNewDish({ name: "", description: "", price: "" });
+
+    const res = await axios.get(
+      `http://localhost:8080/api/dishes/restaurant/${restaurant.id}`
+    );
+
+    setDishes(res.data);
+  };
+
+  return (
+    <div className="card" style={{ marginTop: "20px" }}>
+
+      {/* Restaurant Header */}
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }}>
+        <div>
+          <h3>{restaurant.name}</h3>
+          <p style={{ color: "gray" }}>{restaurant.city}</p>
+        </div>
+      </div>
+
+      <hr />
+
+      {/* Dishes Section */}
       <h4>Dishes</h4>
 
       {dishes.length === 0 ? (
         <p>No dishes yet</p>
       ) : (
         dishes.map(d => (
-          <div key={d.id}>
-            {d.name} - ₹{d.price}
+          <div
+            key={d.id}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "8px",
+              padding: "8px 0"
+            }}
+          >
+            <span>
+              {d.name} — ₹{d.price}
+            </span>
+
             <button
-              style={{ marginLeft: "10px" }}
+              className="btn btn-danger"
               onClick={() => deleteDish(d.id)}
             >
               Delete
@@ -108,8 +163,50 @@ function RestaurantBlock({ restaurant }) {
         ))
       )}
 
+      <hr />
+
+      {/* Add Dish Section */}
       <h4>Add Dish</h4>
-      <AddDish restaurantId={restaurant.id} />
+
+      <form onSubmit={addDish}
+        style={{
+          display: "flex",
+          gap: "10px",
+          flexWrap: "wrap"
+        }}
+      >
+        <input
+          className="input"
+          placeholder="Name"
+          value={newDish.name}
+          onChange={e =>
+            setNewDish({ ...newDish, name: e.target.value })
+          }
+        />
+
+        <input
+          className="input"
+          placeholder="Description"
+          value={newDish.description}
+          onChange={e =>
+            setNewDish({ ...newDish, description: e.target.value })
+          }
+        />
+
+        <input
+          className="input"
+          placeholder="Price"
+          value={newDish.price}
+          onChange={e =>
+            setNewDish({ ...newDish, price: e.target.value })
+          }
+        />
+
+        <button className="btn btn-primary">
+          Add
+        </button>
+      </form>
+
     </div>
   );
 }

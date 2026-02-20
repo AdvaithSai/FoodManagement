@@ -1,46 +1,88 @@
 import { useState } from "react";
 import axios from "axios";
 
-function AddRestaurant(){
+function AddRestaurant() {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const [rest,setRest] = useState({
-    name:"",
-    description:"",
-    address:"",
-    city:""
+  const [restaurant, setRestaurant] = useState({
+    name: "",
+    description: "",
+    address: "",
+    city: ""
   });
 
-  const submit = async e =>{
-  e.preventDefault();
+  const submit = async (e) => {
+    e.preventDefault();
 
-  await axios.post(
-    `http://localhost:8080/api/restaurants/add/${user.id}`,
-    rest
-  );
+    await axios.post(
+      `http://localhost:8080/api/restaurants/add/${user.id}`,
+      restaurant
+    );
 
-  alert("Restaurant added!");
-  window.location.reload(); // quick refresh
-};
+    alert("Restaurant added!");
 
-  return(
-    <form onSubmit={submit}>
-      <h2>Add Restaurant</h2>
+    setRestaurant({
+      name: "",
+      description: "",
+      address: "",
+      city: ""
+    });
+  };
 
-      <input placeholder="Name"
-        onChange={e=>setRest({...rest,name:e.target.value})}/>
+  return (
+    <form onSubmit={submit} style={{ marginTop: "15px" }}>
 
-      <input placeholder="Description"
-        onChange={e=>setRest({...rest,description:e.target.value})}/>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+        gap: "10px"
+      }}>
 
-      <input placeholder="Address"
-        onChange={e=>setRest({...rest,address:e.target.value})}/>
+        <input
+          className="input"
+          placeholder="Restaurant Name"
+          value={restaurant.name}
+          onChange={e =>
+            setRestaurant({ ...restaurant, name: e.target.value })
+          }
+        />
 
-      <input placeholder="City"
-        onChange={e=>setRest({...rest,city:e.target.value})}/>
+        <input
+          className="input"
+          placeholder="City"
+          value={restaurant.city}
+          onChange={e =>
+            setRestaurant({ ...restaurant, city: e.target.value })
+          }
+        />
 
-      <button>Add</button>
+        <input
+          className="input"
+          placeholder="Address"
+          value={restaurant.address}
+          onChange={e =>
+            setRestaurant({ ...restaurant, address: e.target.value })
+          }
+        />
+
+        <input
+          className="input"
+          placeholder="Description"
+          value={restaurant.description}
+          onChange={e =>
+            setRestaurant({ ...restaurant, description: e.target.value })
+          }
+        />
+
+      </div>
+
+      <br />
+
+      <button className="btn btn-primary">
+        Add Restaurant
+      </button>
+
     </form>
   );
 }
