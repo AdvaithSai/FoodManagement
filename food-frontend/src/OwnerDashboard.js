@@ -41,7 +41,12 @@ function OwnerDashboard() {
     >
       View Orders 📦
     </button>
-
+<button
+  className="btn btn-success"
+  onClick={() => navigate("/owner/analytics")}
+>
+  View Analytics 📊
+</button>
     <button
       className="btn btn-danger"
       onClick={logout}
@@ -49,6 +54,7 @@ function OwnerDashboard() {
     >
       Logout
     </button>
+
   </div>
 
 </div>

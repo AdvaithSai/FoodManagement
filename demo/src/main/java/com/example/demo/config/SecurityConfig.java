@@ -8,6 +8,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+    private final OAuthSuccessHandler oAuthSuccessHandler;
+
+    public SecurityConfig(OAuthSuccessHandler oAuthSuccessHandler) {
+        this.oAuthSuccessHandler = oAuthSuccessHandler;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -15,6 +21,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll()
+            )
+            .oauth2Login(oauth -> oauth
+                .successHandler(oAuthSuccessHandler)
             );
 
         return http.build();

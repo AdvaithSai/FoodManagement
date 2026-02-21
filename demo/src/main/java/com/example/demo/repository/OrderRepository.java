@@ -21,4 +21,6 @@ List<Order> findOrdersByOwner(@Param("ownerId") Long ownerId);
     
 
     List<Order> findByUserId(Long userId);
+    @Query("SELECT o FROM Order o JOIN o.items i JOIN i.dish d JOIN d.restaurant r WHERE r.owner.id = :ownerId")
+List<Order> findByOwnerId(@Param("ownerId") Long ownerId);
 }

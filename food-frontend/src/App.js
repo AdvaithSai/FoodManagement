@@ -8,6 +8,8 @@ import Menu from "./Menu";
 import Cart from "./Cart";
 import OrderHistory from "./OrderHistory";
 import OwnerOrders from "./OwnerOrders";
+import OwnerAnalytics from "./OwnerAnalytics";
+import OAuthSuccess from "./OAuthSuccess";
 
 
 
@@ -22,6 +24,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
 <Route path="/orders" element={<OrderHistory />} />
 <Route path="/owner/orders" element={<OwnerOrders />} />
+<Route path="/oauth-success" element={<OAuthSuccess />} />
 
         <Route
           path="/owner"
@@ -40,6 +43,10 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+  path="/owner/analytics"
+  element={<OwnerAnalytics />}
+/>
 
       </Routes>
     </Router>

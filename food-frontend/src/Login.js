@@ -66,6 +66,9 @@ function Login() {
 
         <button className="btn btn-primary">Login</button>
       </form>
+      <a href="http://localhost:8080/oauth2/authorization/google">
+  
+</a>
 
       <p>
         New user? <Link to="/register">Register</Link>

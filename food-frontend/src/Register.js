@@ -75,6 +75,9 @@ function Register() {
         </select>
 
         <br /><br />
+        <a href="http://localhost:8080/oauth2/authorization/google">
+  
+</a>
 
         <button className="btn btn-primary">
           Register
