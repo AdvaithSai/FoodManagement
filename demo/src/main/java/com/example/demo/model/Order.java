@@ -35,11 +35,9 @@ public class Order {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // Order lifecycle statuses:
-    // PLACED
-    // PREPARING
-    // DECLINED
-    // SHIPPED
-    // DELIVERED
+    // PLACED → PREPARING → SHIPPED → DELIVERED
+    //        ↘ DECLINED  (by owner)
+    //        ↘ CANCELLED (by customer, before SHIPPED)
     private String status = "PLACED";
 
     @ManyToOne

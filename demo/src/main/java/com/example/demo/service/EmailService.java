@@ -50,4 +50,25 @@ public class EmailService {
 
         mailSender.send(message);
     }
+
+    public void sendOtpEmail(String toEmail, String otp) {
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject("🔐 FoodExpress – Your Password Reset OTP");
+
+        message.setText(
+                "Hello,\n\n" +
+                "We received a request to reset your FoodExpress account password.\n\n" +
+                "Your One-Time Password (OTP) is:\n\n" +
+                "  " + otp + "\n\n" +
+                "This OTP is valid for 10 minutes. Do NOT share it with anyone.\n\n" +
+                "If you did not request a password reset, please ignore this email — " +
+                "your account remains safe.\n\n" +
+                "Warm regards,\n" +
+                "The FoodExpress Team"
+        );
+
+        mailSender.send(message);
+    }
 }

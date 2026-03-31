@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -78,5 +79,21 @@ public class CartController {
     public void removeItem(@PathVariable Long itemId){
         cartItemRepo.deleteById(itemId);
     }
-}
 
+    // Update quantity
+    @PutMapping("/update/{itemId}/{quantity}")
+    public CartItem updateQuantity(
+            @PathVariable Long itemId,
+            @PathVariable int quantity) {
+
+        if (quantity <= 0) {
+            cartItemRepo.deleteById(itemId);
+            return null;
+        }
+
+        CartItem item = cartItemRepo.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+        item.setQuantity(quantity);
+        return cartItemRepo.save(item);
+    }
+}

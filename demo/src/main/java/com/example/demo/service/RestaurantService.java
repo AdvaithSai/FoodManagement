@@ -26,4 +26,8 @@ public List<Restaurant> getAll(){
     return repo.findAll();
 }
 
+public void delete(Long id) {
+    repo.deleteById(id);
+}
+
 }

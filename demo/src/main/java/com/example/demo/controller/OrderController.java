@@ -95,20 +95,16 @@ public Order updateStatus(
     Order order = orderRepo.findById(orderId)
             .orElseThrow(() -> new RuntimeException("Order not found"));
 
-    if(action.equals("ACCEPT")){
-        order.setStatus("PREPARING");
-    }
-    else if(action.equals("DECLINE")){
-        order.setStatus("DECLINED");
-    }
-    else if(action.equals("SHIP")){
-        order.setStatus("SHIPPED");
-    }
-    else if(action.equals("DELIVER")){
-        order.setStatus("DELIVERED");
+    switch (action) {
+        case "ACCEPT"  -> order.setStatus("PREPARING");
+        case "DECLINE" -> order.setStatus("DECLINED");
+        case "SHIP"    -> order.setStatus("SHIPPED");
+        case "DELIVER" -> order.setStatus("DELIVERED");
+        case "CANCEL"  -> order.setStatus("CANCELLED");
+        default        -> throw new RuntimeException("Unknown action: " + action);
     }
 
-    return order;
+    return orderRepo.save(order); // ← persist to DB
 }
 
 
