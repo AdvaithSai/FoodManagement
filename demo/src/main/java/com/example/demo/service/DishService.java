@@ -25,7 +25,11 @@ public class DishService {
     }
 
     public void delete(Long id){
-    repo.deleteById(id);
-}
+        repo.deleteById(id);
+    }
+
+    public List<Dish> searchByName(String name) {
+        return repo.findByNameContainingIgnoreCase(name);
+    }
 
 }

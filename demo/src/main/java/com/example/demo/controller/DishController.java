@@ -59,4 +59,10 @@ public void deleteDish(@PathVariable Long dishId){
     service.delete(dishId);
 }
 
+    @GetMapping("/search")
+    public java.util.List<Dish> searchDishes(
+            @org.springframework.web.bind.annotation.RequestParam String name) {
+        return service.searchByName(name);
+    }
+
 }
